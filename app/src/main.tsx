@@ -21,11 +21,10 @@ declare module '@tanstack/react-router' {
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  // <StrictMode>
   <QueryClientProvider client={query}>
     <ThemeProvider>
       <IconContext.Provider value={{ style: { height: '1.5rem', width: '1.5rem' } }}>
-        <div className='flex h-screen w-screen pt-10 px-5 '>
+        <div className='flex h-screen w-screen overflow-hidden'>
           <SplashScreen>
             <RouterProvider router={router} />
           </SplashScreen>
@@ -33,5 +32,4 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       </IconContext.Provider>
     </ThemeProvider>
   </QueryClientProvider>
-  // </StrictMode>,
 )

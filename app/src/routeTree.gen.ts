@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AnimeAnimeIdImport } from './routes/anime/$animeId'
 
 // Create Virtual Routes
 
@@ -74,6 +75,12 @@ const SettingsAboutLazyRoute = SettingsAboutLazyImport.update({
   import('./routes/settings/about.lazy').then((d) => d.Route),
 )
 
+const AnimeAnimeIdRoute = AnimeAnimeIdImport.update({
+  id: '/anime/$animeId',
+  path: '/anime/$animeId',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -104,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/menu'
       fullPath: '/menu'
       preLoaderRoute: typeof MenuLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/anime/$animeId': {
+      id: '/anime/$animeId'
+      path: '/anime/$animeId'
+      fullPath: '/anime/$animeId'
+      preLoaderRoute: typeof AnimeAnimeIdImport
       parentRoute: typeof rootRoute
     }
     '/settings/about': {
@@ -137,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/download': typeof DownloadLazyRoute
   '/explore': typeof ExploreLazyRoute
   '/menu': typeof MenuLazyRoute
+  '/anime/$animeId': typeof AnimeAnimeIdRoute
   '/settings/about': typeof SettingsAboutLazyRoute
   '/settings/explore': typeof SettingsExploreLazyRoute
   '/settings/preferences': typeof SettingsPreferencesLazyRoute
@@ -147,6 +162,7 @@ export interface FileRoutesByTo {
   '/download': typeof DownloadLazyRoute
   '/explore': typeof ExploreLazyRoute
   '/menu': typeof MenuLazyRoute
+  '/anime/$animeId': typeof AnimeAnimeIdRoute
   '/settings/about': typeof SettingsAboutLazyRoute
   '/settings/explore': typeof SettingsExploreLazyRoute
   '/settings/preferences': typeof SettingsPreferencesLazyRoute
@@ -158,6 +174,7 @@ export interface FileRoutesById {
   '/download': typeof DownloadLazyRoute
   '/explore': typeof ExploreLazyRoute
   '/menu': typeof MenuLazyRoute
+  '/anime/$animeId': typeof AnimeAnimeIdRoute
   '/settings/about': typeof SettingsAboutLazyRoute
   '/settings/explore': typeof SettingsExploreLazyRoute
   '/settings/preferences': typeof SettingsPreferencesLazyRoute
@@ -170,6 +187,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/explore'
     | '/menu'
+    | '/anime/$animeId'
     | '/settings/about'
     | '/settings/explore'
     | '/settings/preferences'
@@ -179,6 +197,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/explore'
     | '/menu'
+    | '/anime/$animeId'
     | '/settings/about'
     | '/settings/explore'
     | '/settings/preferences'
@@ -188,6 +207,7 @@ export interface FileRouteTypes {
     | '/download'
     | '/explore'
     | '/menu'
+    | '/anime/$animeId'
     | '/settings/about'
     | '/settings/explore'
     | '/settings/preferences'
@@ -199,6 +219,7 @@ export interface RootRouteChildren {
   DownloadLazyRoute: typeof DownloadLazyRoute
   ExploreLazyRoute: typeof ExploreLazyRoute
   MenuLazyRoute: typeof MenuLazyRoute
+  AnimeAnimeIdRoute: typeof AnimeAnimeIdRoute
   SettingsAboutLazyRoute: typeof SettingsAboutLazyRoute
   SettingsExploreLazyRoute: typeof SettingsExploreLazyRoute
   SettingsPreferencesLazyRoute: typeof SettingsPreferencesLazyRoute
@@ -209,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadLazyRoute: DownloadLazyRoute,
   ExploreLazyRoute: ExploreLazyRoute,
   MenuLazyRoute: MenuLazyRoute,
+  AnimeAnimeIdRoute: AnimeAnimeIdRoute,
   SettingsAboutLazyRoute: SettingsAboutLazyRoute,
   SettingsExploreLazyRoute: SettingsExploreLazyRoute,
   SettingsPreferencesLazyRoute: SettingsPreferencesLazyRoute,
@@ -228,6 +250,7 @@ export const routeTree = rootRoute
         "/download",
         "/explore",
         "/menu",
+        "/anime/$animeId",
         "/settings/about",
         "/settings/explore",
         "/settings/preferences"
@@ -244,6 +267,9 @@ export const routeTree = rootRoute
     },
     "/menu": {
       "filePath": "menu.lazy.tsx"
+    },
+    "/anime/$animeId": {
+      "filePath": "anime/$animeId.tsx"
     },
     "/settings/about": {
       "filePath": "settings/about.lazy.tsx"

@@ -1,9 +1,4 @@
-export type WrapperErrorProps = {
-    error_kind: string,
-    human_readable: string,
-    status: number,
-    status_text: string,
-}
+import type { WrapperErrorProps } from '../types/error'
 
 export class WrapperError extends Error {
   constructor (public options: WrapperErrorProps) {

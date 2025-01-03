@@ -12,6 +12,23 @@
     "fs:allow-read-text-file",
     "fs:allow-resource-read-recursive",
     {
+      "identifier": "http:allow-fetch-send",
+      "allow": [
+        {
+          "url": "https://api.github.com/**"
+        },
+        {
+          "url": "https://github.com/**"
+        },
+        {
+          "url": "http://localhost**"
+        },
+        {
+          "url": "https://www.youtube.com/**"
+        }
+      ]
+    },
+    {
       "identifier": "http:allow-fetch",
       "allow": [
         {
@@ -21,26 +38,21 @@
           "url": "https://github.com/*"
         },
         {
-          "url": "https://localhost:*"
-        }
-      ]
-    },
-    {
-      "identifier": "fs:allow-exists",
-      "allow": [
+          "url": "http://localhost:*"
+        },
         {
-          "path": "$APPDATA/*"
+          "url": "https://www.youtube.com/*"
         }
       ]
     },
-    {
-      "identifier": "fs:allow-write-file",
-      "allow": [
-        {
-          "path": "$APPDATA/*"
-        }
-      ]
-    },
+    "fs:allow-appdata-read-recursive",
+    "fs:allow-appdata-write-recursive",
+    "fs:allow-appdata-meta-recursive",
+    "fs:scope-appdata-recursive",
+    "fs:allow-download-read-recursive",
+    "fs:allow-download-write-recursive",
+    "fs:allow-download-meta-recursive",
+    "fs:scope-download-recursive",
     "os:default",
     "upload:default"
   ]

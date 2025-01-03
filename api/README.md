@@ -4,6 +4,7 @@ To install dependencies:
 
 ```bash
 bun install
+bun pm trust
 ```
 
 To run:

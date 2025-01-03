@@ -2,7 +2,7 @@ export enum DataTypes {
     AnimeList = 'AnimeList'
 }
 
-type AnimeTorrentData = {
+export type AnimeTorrentData = {
     category: string
     title: string
     link: `https://nyaa.si/view/${number}`

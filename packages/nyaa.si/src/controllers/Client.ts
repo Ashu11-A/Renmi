@@ -1,6 +1,5 @@
-import type { Page, Browser } from 'puppeteer'
+import type { Browser, Page } from 'puppeteer'
 import puppeteer from 'puppeteer'
-import { join } from 'path'
 
 type ClientConfig = {
     userAgent?: string
@@ -17,7 +16,7 @@ export class Client {
     this.browser = await puppeteer.launch({
       waitForInitialPage: true,
       acceptInsecureCerts: true,
-      userDataDir: join(process.cwd(), 'cache'),
+      // userDataDir: join(process.cwd(), 'cache'),
       headless: false,
     })
     this.page = (await this.browser.pages())[0]

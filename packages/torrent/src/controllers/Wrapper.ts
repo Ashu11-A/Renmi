@@ -1,11 +1,15 @@
 import type { Client } from './Client'
-import { WrapperError, type WrapperErrorProps } from './Error'
+import { WrapperError } from './Error'
 import { Torrent } from './Torrent'
-import { TorrentState, type AddTorrent, type TorrentId, type TorrentInfo, type TorrentPeerStats, type TorrentStats } from './types/wrapper'
-import { Watcher, type WatcherOptions } from './Watcher'
+import { TorrentState, type AddTorrent, type ListTorrent, type TorrentId, type TorrentInfo, type TorrentPeerStats, type TorrentStats } from '../types/wrapper'
+import { Watcher } from './Watcher'
+import type { WatcherOptions } from '../types/watcher'
+import type { WrapperErrorProps } from '../types/error'
+import { URLSearchParams } from 'url'
 
 export class Wrapper {
   private baseURL
+
   constructor (public client: Client) {
     this.baseURL = `127.0.0.1:${client.port}`
   }
@@ -18,12 +22,12 @@ export class Wrapper {
     return new Watcher({ ...options, torrent: this.createComponent(options.uuid) })
   }
   
-  async getTorrents(): Promise<TorrentId[] | WrapperError> {
+  async getTorrents(): Promise<Torrent[] | WrapperError> {
     try {
       const result = await this.request<{ torrents: TorrentId[] }>('/torrents')
       if (result instanceof WrapperError) return result
 
-      return result.torrents
+      return result.torrents.map((torrent) => new Torrent({ uuid: torrent.info_hash }, this))
     } catch (err) {
       return err as WrapperError
     }
@@ -87,9 +91,31 @@ export class Wrapper {
     }
   }
 
-  async add(magnet: string): Promise<AddTorrent | WrapperError> {
+  async add({ magnet, outputFolder, overwrite }: {
+    magnet: string,
+    overwrite?: boolean,
+    /**
+     * The folder to download to.
+     * If not specified, defaults to the one that rqbit server started with
+     */
+    outputFolder?: string
+  }): Promise<AddTorrent | WrapperError> {
+    const query: Record<string, string> = {}
+
+    query.overwrite = String(overwrite ?? false)
+    if (outputFolder) query.outputFolder = outputFolder
+    console.log(new URLSearchParams(query))
+    
     try {
-      return await this.request('/torrents?allow_overwrite=true', magnet, 'POST')
+      return await this.request('/torrents?' + new URLSearchParams(query), magnet, 'POST')
+    } catch (err) {
+      return err as WrapperError
+    }
+  }
+
+  async list(magnet: string): Promise<ListTorrent | WrapperError> {
+    try {
+      return await this.request('/torrents?list_only=true', magnet, 'POST')
     } catch (err) {
       return err as WrapperError
     }
@@ -131,18 +157,18 @@ export class Wrapper {
   }
 
   private async request<T>(url: string, options: Record<string, unknown> | string | undefined = undefined, method: string = 'GET'): Promise<T | WrapperError> {
-    const response = await fetch('http://' + this.baseURL + url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      ...(method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS'
-        ? { body: typeof options === 'string' ? options : JSON.stringify(options) }
-        : {})
-    })
-
     try {
+      const response = await fetch('http://' + this.baseURL + url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        ...(method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS'
+          ? { body: typeof options === 'string' ? options : JSON.stringify(options) }
+          : {})
+      })
+
       const json = await response.json()
 
       if (response.status !== 200) {
@@ -152,10 +178,18 @@ export class Wrapper {
       if (Object.keys(json).length === 0) {
         if (response.status === 200) return true as T
       }
-      
+
       return json as T
     } catch (err) {
-      if (response.status === 200) return true as T
+      if (err instanceof Error) {
+        console.log(JSON.stringify(err, null, 2))
+        throw new WrapperError({
+          error_kind: err.name,
+          human_readable: err.message,
+          status_text: err.message,
+          status: 400
+        })
+      }
       throw new Error(typeof err === 'object' ? JSON.stringify(err) : String(err))
     }
   }

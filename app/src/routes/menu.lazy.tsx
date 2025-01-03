@@ -34,7 +34,7 @@ function RouteComponent() {
   ]
 
   return (
-    <div className="flex flex-col w-full h-full m-16 gap-8">
+    <div className="flex flex-col w-full h-full px-16 gap-8">
       {settings.map((item) => (
         <Card
           className="max-w-full cursor-pointer dark:hover:bg-white/5 hover:bg-black/5"

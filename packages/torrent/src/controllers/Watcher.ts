@@ -1,33 +1,16 @@
+import type { WatcherOptions } from '../types/watcher'
+import { TorrentState } from '../types/wrapper'
 import type { Torrent } from './Torrent'
-import { TorrentState, type TorrentInfo, type TorrentPeerStats, type TorrentStats } from './types/wrapper'
-
-export type WatcherOptions = WatcherFunctions & {
-  interval: number
-  continueOnPaused?: boolean
-  continueOnCompleted?: boolean
-}
-
-export type WatcherFunctions = {
-    onRequest?: (data: {
-        info: TorrentInfo | Error,
-        peerStats: TorrentPeerStats | Error,
-        stats: TorrentStats<TorrentState> | Error
-    }) => void
-    onPaused?: () => void
-    onCompleted?: () => void
-    onResume?: () => void
-  }
-  
 
 export class Watcher {
   public state: TorrentState = TorrentState.Initializing
+
   constructor (public options: WatcherOptions & { torrent: Torrent }) {
     this.init()
   }
 
   init () {
     const { torrent } = this.options
-
     const intervalId = setInterval(async () => {
       const [infoResponse, peerStatsResponse, statsResponse] = await Promise.all([
         torrent.info(),

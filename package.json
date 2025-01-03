@@ -15,10 +15,17 @@
     "typescript": "^5.0.0"
   },
   "trustedDependencies": [
+    "bcrypt",
     "bufferutil",
+    "esbuild",
+    "msgpackr-extract",
     "node-datachannel",
     "puppeteer",
+    "sqlite3",
     "utf-8-validate",
     "utp-native"
-  ]
+  ],
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
 }

@@ -50,7 +50,7 @@ export class Download<IsTauri extends boolean, DownloadTyped extends DownloadTyp
     }
   }
   
-  private async download(url: string) {
+  async download(url: string) {
     if (this.tauri) {
       ((await import('@tauri-apps/plugin-upload')).download)(
         url,
@@ -138,13 +138,13 @@ export class Download<IsTauri extends boolean, DownloadTyped extends DownloadTyp
     return `${parseFloat((bytes / Math.pow(k, sizeIndex)).toFixed(decimals))} ${sizes[sizeIndex]}`
   }
   
-  private async getFetch(): Promise<typeof fetch> {
+  async getFetch(): Promise<typeof fetch> {
     return this.tauri
       ? (await import('@tauri-apps/plugin-http')).fetch
       : fetch
   }
 
-  private findGithubAsset (
+  findGithubAsset (
     data: GithubRelease | GithubRelease[],
     options: DownloadProps<IsTauri, DownloadType.GitHub>
   ): ReleaseAsset | undefined {
